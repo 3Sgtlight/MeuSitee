@@ -3,268 +3,257 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Reconhecimento Facial — Cyber Verde</title>
+<title>Reconhecimento Facial — Hacker UI</title>
 <style>
 :root{
-  --bg:#07110a;
-  --panel:#0b1a12;
-  --neon:#00ff6a;
-  --neon-2:#00d06a;
-  --accent:#0fd37a;
-  --muted:#8fb29a;
+  --bg:#020204;
+  --panel:#041014;
+  --accent:#00ff66;
+  --accent-dim:#00b356;
+  --glow:rgba(0,255,102,0.15);
+  --muted:#6fbf9a;
   --glass:rgba(255,255,255,0.02);
-  --card-shadow: 0 18px 60px rgba(0,0,0,0.7);
-  --radius:14px;
+  --radius:10px;
+  --card-shadow: 0 20px 80px rgba(0,0,0,0.8);
+  --mono: "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
 }
 
-/* Reset e base */
+/* base */
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;color:#dfffe7;
-  background:
-    radial-gradient(800px 300px at 10% 10%, rgba(0,255,122,0.03), transparent 6%),
-    radial-gradient(600px 240px at 90% 90%, rgba(0,208,106,0.02), transparent 6%),
-    linear-gradient(180deg,#030806,#07110a);
-  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;background:
+  radial-gradient(800px 300px at 10% 10%, rgba(0,255,102,0.02), transparent 6%),
+  linear-gradient(180deg,#000,#021014);color:var(--muted);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+a{color:var(--accent);}
 
-.container{
+/* layout central estilo terminal */
+.outer{
   min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:36px 20px;
+  padding:32px;
 }
-
-/* painel principal */
-.shell{
+.hud{
   width:100%;
-  max-width:1120px;
+  max-width:1180px;
   display:grid;
-  grid-template-columns:360px 1fr;
-  gap:22px;
-  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border-radius:18px;
-  border:1px solid rgba(0,255,122,0.04);
+  grid-template-columns: 360px 1fr;
+  gap:20px;
+  background:linear-gradient(180deg, rgba(0,0,0,0.55), rgba(4,16,20,0.55));
+  border:1px solid rgba(0,255,102,0.06);
+  border-radius:14px;
   padding:18px;
   box-shadow:var(--card-shadow);
   position:relative;
   overflow:hidden;
 }
-@media (max-width:920px){ .shell{grid-template-columns:1fr;padding:14px} }
+@media (max-width:920px){ .hud{grid-template-columns:1fr;padding:12px} }
 
-/* elementos decorativos cibernéticos */
-.holo{
-  pointer-events:none;
-  position:absolute;
-  inset:0;
+/* animated scan & noise */
+.grid-overlay{
+  position:absolute;inset:0;pointer-events:none;
   background-image:
-    linear-gradient(90deg, rgba(0,255,122,0.03) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(0,208,106,0.02) 1px, transparent 1px);
-  background-size:140px 140px, 180px 180px;
+    linear-gradient(90deg, rgba(0,255,102,0.02) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(0,180,86,0.02) 1px, transparent 1px);
   mix-blend-mode:screen;
+  background-size:140px 140px, 160px 160px;
+  opacity:0.85;
 }
-.scanline{
-  position:absolute;left:0;right:0;height:2px;top:0;
-  background:linear-gradient(90deg, transparent, rgba(0,255,122,0.12), transparent);
-  mix-blend-mode:screen;animation:scan 5s linear infinite;
+.scan{
+  position:absolute;left:0;right:0;height:2px;top:-20%;
+  background:linear-gradient(90deg, transparent, rgba(0,255,102,0.12), transparent);
+  animation:scan 5s linear infinite;mix-blend-mode:screen;pointer-events:none;
 }
-@keyframes scan{0%{top:-8%}50%{top:108%}100%{top:-8%}}
+@keyframes scan{0%{top:-20%}50%{top:120%}100%{top:-20%}}
 
-/* painel esquerdo */
-.panel{
-  background:linear-gradient(180deg, rgba(3,8,5,0.6), rgba(6,14,10,0.6));
-  border-radius:12px;padding:16px;border:1px solid rgba(0,255,122,0.05);
-  display:flex;flex-direction:column;gap:12px;position:relative;
+/* left panel: terminal controls */
+.left{
+  background:linear-gradient(180deg, rgba(2,8,6,0.8), rgba(2,12,10,0.7));
+  border-radius:10px;padding:16px;border:1px solid rgba(0,255,102,0.04);display:flex;flex-direction:column;gap:12px;
 }
-
 .brand{
   display:flex;gap:12px;align-items:center;
 }
 .logo{
-  width:64px;height:64px;border-radius:12px;
-  display:grid;place-items:center;
-  background:linear-gradient(135deg,var(--neon),var(--neon-2));
-  color:#052016;font-weight:800;font-size:20px;box-shadow:0 8px 30px rgba(0,255,122,0.06);
+  width:64px;height:64px;border-radius:8px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#002a0a,#005a2a);color:var(--accent);font-weight:900;font-family:var(--mono);
+  font-size:20px;box-shadow:0 8px 30px rgba(0,255,102,0.06);
 }
-.title h1{margin:0;font-size:18px}
-.title p{margin:0;color:var(--muted);font-size:13px}
+.title h1{margin:0;font-size:16px;color:var(--accent)}
+.title p{margin:0;font-size:13px;color:var(--muted)}
 
-/* controles */
-.controls{display:flex;flex-direction:column;gap:10px}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.btn{
-  border:0;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:700;color:#041812;
-  background:transparent;border:1px solid rgba(255,255,255,0.02);transition:transform .12s ease;
+/* faux terminal log */
+.terminal{
+  background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.25));
+  border-radius:8px;padding:12px;border:1px solid rgba(0,255,102,0.03);font-family:var(--mono);font-size:13px;color:#bfffe0;height:220px;overflow:auto;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
 }
-.btn:active{transform:translateY(1px)}
-.btn.primary{background:linear-gradient(90deg,var(--neon),var(--neon-2));box-shadow:0 10px 30px rgba(0,255,122,0.06)}
-.btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.03)}
+.terminal .line{white-space:pre-wrap;margin:0 0 6px 0}
+
+/* control buttons styled like console keys */
+.controls{display:flex;gap:8px;flex-wrap:wrap}
+.btn{
+  border:0;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:700;font-family:var(--mono);
+  color:#001814;background:transparent;border:1px solid rgba(255,255,255,0.02);
+}
+.btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-dim));box-shadow:0 8px 20px rgba(0,255,102,0.06);color:#001814}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.02)}
 .small{padding:8px 10px;font-size:13px;border-radius:8px}
 
-/* status e leituras */
-.status{
-  background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
-  border:1px solid rgba(255,255,255,0.02);padding:10px;border-radius:10px;color:var(--muted);
-}
-.readouts{display:flex;gap:10px;flex-wrap:wrap}
-.readout{padding:8px;border-radius:8px;background:rgba(0,0,0,0.2);min-width:110px;text-align:center;font-size:13px;color:var(--muted)}
-.readout strong{display:block;color:var(--neon);font-size:15px}
+/* readouts */
+.readouts{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.readout{background:linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.15));padding:8px;border-radius:8px;border:1px solid rgba(0,255,102,0.03);min-width:110px;text-align:center}
+.readout .num{font-family:var(--mono);font-weight:900;color:var(--accent);font-size:15px}
 
-/* painel direito */
-.view{display:flex;flex-direction:column;gap:12px}
-.viewer{
-  background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
-  padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);
-  box-shadow:0 12px 36px rgba(0,0,0,0.6);display:flex;flex-direction:column;gap:12px;
-}
-.viewer-head{display:flex;justify-content:space-between;align-items:center}
-.viewer-head .meta{color:var(--muted);font-size:13px}
+/* right panel: visor with HUD */
+.right{display:flex;flex-direction:column;gap:12px}
+.hud-top{display:flex;justify-content:space-between;align-items:center}
+.hud-top .meta{color:var(--muted);font-size:13px}
 
-/* webcam container estilo cibernético */
-#webcam-container{
-  min-height:360px;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;
-  background:
-    radial-gradient(500px 160px at 10% 10%, rgba(0,255,122,0.04), transparent 8%),
-    radial-gradient(420px 140px at 90% 90%, rgba(0,208,106,0.03), transparent 8%),
-    linear-gradient(180deg, rgba(2,6,6,0.6), rgba(4,12,10,0.55));
-  position:relative;border:1px solid rgba(0,255,122,0.06);
+/* camera viewport — neon frame */
+.viewport{
+  background:linear-gradient(180deg, rgba(0,0,0,0.55), rgba(2,8,6,0.55));
+  border-radius:10px;padding:12px;border:1px solid rgba(0,255,102,0.06);position:relative;
+  box-shadow: 0 16px 60px rgba(0,0,0,0.7);
 }
-.canvas-frame{padding:8px;border-radius:12px;display:inline-block;box-shadow:inset 0 0 40px rgba(0,255,122,0.02),0 18px 60px rgba(0,0,0,0.6);border:1px solid rgba(0,255,122,0.06)}
-canvas{border-radius:10px;max-width:100%;height:auto;display:block;border:1px solid rgba(0,255,122,0.03)}
-
-/* labels estilo HUD — agora visíveis e responsivos para exatamente 3 classes */
-#label-container{
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  align-items:center;
-  flex-wrap:nowrap;
-  overflow:hidden;
-  padding:6px 4px;
+.frame{
+  display:flex;justify-content:center;align-items:center;padding:6px;border-radius:8px;border:1px solid rgba(0,255,102,0.08);
+  box-shadow: 0 10px 40px rgba(0,255,102,0.04) inset; background:linear-gradient(180deg, rgba(0,255,102,0.01), rgba(0,0,0,0.08));
 }
+#webcam-container{min-height:380px;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
 
-/* cada chip ocupa 1/3 do espaço do painel direito para garantir visibilidade */
+/* HUD chips — ensure three visible columns with labels and progress bars */
+.hud-row{display:flex;gap:10px;align-items:stretch;justify-content:space-between}
 .hud-chip{
-  flex: 1 1 0;
-  min-width:0;
-  max-width:33%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(180deg, rgba(0,255,122,0.05), rgba(0,208,106,0.03));
-  color:#001710;
-  padding:12px 10px;
-  border-radius:12px;
-  font-weight:800;
-  font-size:15px;
-  text-align:center;
-  border:1px solid rgba(0,255,122,0.06);
-  box-shadow: 0 8px 26px rgba(0,255,122,0.04);
+  flex:1 1 0;min-width:0;background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.25));
+  border-radius:8px;padding:10px;border:1px solid rgba(0,255,102,0.04);font-family:var(--mono);font-size:13px;color:#caffd9;
+  display:flex;flex-direction:column;gap:8px;align-items:flex-start;
+}
+.hud-chip .label{font-weight:900;color:var(--accent);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hud-chip .bar{
+  width:100%;height:10px;border-radius:6px;background:rgba(255,255,255,0.03);overflow:hidden;border:1px solid rgba(0,255,102,0.03)
+}
+.hud-chip .bar > i{
+  display:block;height:100%;background:linear-gradient(90deg,var(--accent),#8bf7b7);width:0%;box-shadow:0 6px 18px rgba(0,255,102,0.12) inset;
+}
+.hud-chip .pct{font-family:var(--mono);font-weight:800;color:var(--accent);font-size:13px}
+
+/* visual detection reticle */
+.reticle{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:260px;height:260px;border-radius:50%;
+  pointer-events:none;border:2px dashed rgba(0,255,102,0.08);box-shadow:0 0 40px rgba(0,255,102,0.02) inset;
 }
 
-/* nome da classe e probabilidade em destaque */
-.hud-chip .label{font-size:16px;color:var(--neon);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hud-chip .prob{font-size:14px;color:#dfffe7}
+/* alert / status line */
+.status-line{font-family:var(--mono);font-size:13px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;gap:12px}
 
-/* quando houver mais que 3 classes, a visualização prioriza 3 primeiras; ao reduzir para telas pequenas, chips ficam scrolláveis */
-@media (max-width:720px){
-  #label-container{overflow-x:auto;padding-bottom:8px}
-  .hud-chip{max-width:260px;flex:0 0 auto}
-}
+/* footer */
+.foot{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-top:6px}
+kbd{background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.02);padding:4px 6px;border-radius:6px;font-family:var(--mono);color:var(--accent)}
 
-/* rodapé pequeno */
-.foot{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}
+/* scrollbars for terminal look */
+.terminal::-webkit-scrollbar{height:8px;width:8px}
+.terminal::-webkit-scrollbar-thumb{background:linear-gradient(90deg, rgba(0,255,102,0.12), rgba(0,255,102,0.06));border-radius:6px}
+.terminal::-webkit-scrollbar-track{background:transparent}
 
-/* acessibilidade foco */
-button:focus{outline:3px solid rgba(0,255,122,0.12);outline-offset:2px}
-code{background:rgba(255,255,255,0.02);padding:2px 6px;border-radius:6px;font-family:monospace}
+button:focus{outline:3px solid rgba(0,255,102,0.08);outline-offset:2px}
+code{background:rgba(255,255,255,0.02);padding:2px 6px;border-radius:6px;font-family:var(--mono)}
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="shell" role="main" aria-label="Painel cibernético de reconhecimento facial">
-    <div class="holo" aria-hidden="true"></div>
-    <div class="scanline" aria-hidden="true"></div>
+<div class="outer">
+  <div class="hud" role="main" aria-label="Painel hacker de reconhecimento facial">
+    <div class="grid-overlay" aria-hidden="true"></div>
+    <div class="scan" aria-hidden="true"></div>
 
-    <aside class="panel" aria-labelledby="panel-title">
+    <aside class="left" aria-labelledby="left-title">
       <div class="brand">
-        <div class="logo" aria-hidden="true">CY</div>
+        <div class="logo" aria-hidden="true">0xAI</div>
         <div class="title">
-          <h1 id="panel-title">Reconhecimento Facial — Cyber Verde</h1>
-          <p>Interface cibernética; modelo local Teachable Machine</p>
+          <h1 id="left-title">FACEREC HACK UI</h1>
+          <p>Modo: Offline · Segurança: Hardened</p>
         </div>
       </div>
 
-      <div class="controls" aria-live="polite">
-        <div class="row">
-          <button id="start-btn" class="btn primary" type="button">Start</button>
-          <button id="pause-btn" class="btn ghost small" type="button" aria-pressed="false">Pausar câmera</button>
-          <button id="clear-labels" class="btn ghost small" type="button">Limpar previsões</button>
+      <div class="terminal" id="terminal" role="log" aria-live="polite" aria-atomic="false">
+        <div class="line">booting modules...</div>
+        <div class="line">loading tfjs ...</div>
+        <div class="line">loading model metadata ...</div>
+        <div class="line">awaiting user start</div>
+      </div>
+
+      <div class="controls" aria-label="Controles">
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="start-btn" class="btn primary" type="button">START</button>
+          <button id="pause-btn" class="btn ghost small" type="button" aria-pressed="false">PAUSE</button>
+          <button id="clear-btn" class="btn ghost small" type="button">RESET HUD</button>
         </div>
 
-        <div class="status" role="status" aria-atomic="true">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <strong style="color:var(--neon)">Sistema</strong>
-            <span style="color:var(--muted);font-size:13px">Segurança: ON</span>
-          </div>
-
-          <div class="readouts" style="margin-top:8px">
-            <div class="readout"><strong id="status-text">Aguardando</strong><span style="color:var(--muted);font-size:12px">Status</span></div>
-            <div class="readout"><strong id="cam-res">—</strong><span style="color:var(--muted);font-size:12px">Resolução</span></div>
-            <div class="readout"><strong id="pred-count">—</strong><span style="color:var(--muted);font-size:12px">Classes</span></div>
-          </div>
-
-          <div style="margin-top:10px;color:var(--muted);font-size:13px">Ao iniciar, a página previne novas janelas e garante apenas uma instância ativa da câmera.</div>
+        <div class="readouts">
+          <div class="readout"><div class="num" id="status-num">—</div><div style="font-size:12px;color:var(--muted)">Uptime</div></div>
+          <div class="readout"><div class="num" id="cam-res">—</div><div style="font-size:12px;color:var(--muted)">Cam</div></div>
+          <div class="readout"><div class="num" id="pred-count">—</div><div style="font-size:12px;color:var(--muted)">Classes</div></div>
         </div>
+      </div>
+
+      <div class="status-line" aria-hidden="false">
+        <div>Local model: <code>./my_model/</code></div>
+        <div>Mode: <kbd>HARDENED</kbd></div>
       </div>
     </aside>
 
-    <section class="view" aria-labelledby="view-title">
-      <div class="viewer">
-        <div class="viewer-head">
-          <div>
-            <strong id="view-title">Visor Cibernético</strong>
-            <div class="meta">Canvas ao vivo e previsões em HUD</div>
+    <section class="right" aria-labelledby="right-title">
+      <div class="hud-top">
+        <div>
+          <strong id="right-title" style="font-family:var(--mono);color:var(--accent)">VISOR</strong>
+          <div class="meta">Canvas ao vivo · HUD de previsões</div>
+        </div>
+        <div class="meta">Teachable Machine · TensorFlow.js</div>
+      </div>
+
+      <div class="viewport" role="region" aria-label="Visor da câmera">
+        <div class="frame">
+          <div id="webcam-container">
+            <div style="color:var(--muted);font-family:var(--mono);font-weight:700">Teachable Machine Image Model</div>
           </div>
-          <div class="meta">Modelo local: <code>./my_model/</code></div>
+          <div class="reticle" aria-hidden="true"></div>
         </div>
 
-        <div id="webcam-container" aria-label="Container da webcam">
-          <div style="color:var(--muted);font-weight:700">Teachable Machine Image Model</div>
+        <div style="margin-top:10px">
+          <div class="hud-row" id="label-container" role="status" aria-live="polite" aria-atomic="true">
+            <div class="hud-chip" id="chip-0"><div class="label">Class 1</div><div class="bar"><i style="width:0%"></i></div><div class="pct">0%</div></div>
+            <div class="hud-chip" id="chip-1"><div class="label">Class 2</div><div class="bar"><i style="width:0%"></i></div><div class="pct">0%</div></div>
+            <div class="hud-chip" id="chip-2"><div class="label">Class 3</div><div class="bar"><i style="width:0%"></i></div><div class="pct">0%</div></div>
+          </div>
         </div>
 
-        <div id="label-container" role="status" aria-atomic="true" aria-live="polite">
-          <!-- 3 chips iniciais garantidos para visibilidade -->
-          <div class="hud-chip"><div class="label">Classe 1</div><div class="prob">—</div></div>
-          <div class="hud-chip"><div class="label">Classe 2</div><div class="prob">—</div></div>
-          <div class="hud-chip"><div class="label">Classe 3</div><div class="prob">—</div></div>
-        </div>
-
-        <div class="foot">
-          <div class="meta">Bibliotecas: TensorFlow.js · Teachable Machine</div>
-          <div class="meta">Design: Cyber Verde HUD</div>
+        <div class="foot" style="margin-top:12px">
+          <div>status: <span id="terminal-status" style="color:var(--accent)">idle</span></div>
+          <div>ui: 0xface</div>
         </div>
       </div>
     </section>
   </div>
 </div>
 
-<!-- bibliotecas e script original com proteção contra múltiplas janelas e instâncias -->
+<!-- libs originais -->
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
 
 <script>
-/* URL do modelo local */
+/* configuração do modelo local */
 const URL = "./my_model/";
+let model, webcam, maxPredictions;
+let terminal = document.getElementById('terminal');
+let terminalStatus = document.getElementById('terminal-status');
+let statusNum = document.getElementById('status-num');
+let predCountEl = document.getElementById('pred-count');
+let camResEl = document.getElementById('cam-res');
 
-let model, webcam, labelContainer, maxPredictions;
-
-/* preserva referência original de window.open */
+/* bloquear window.open após interação segura */
 if (!window.__origOpen) window.__origOpen = window.open;
 let openLocked = false;
-
-/* bloqueia aberturas de janelas e links _blank */
-function lockWindowOpenOnce(){
+function lockOpen(){
   if (openLocked) return;
   try {
     window.open = function(){ return null; };
@@ -273,225 +262,180 @@ function lockWindowOpenOnce(){
       if (a && a.target === '_blank') e.preventDefault();
     }, {capture:true});
     openLocked = true;
-  } catch(e){
-    console.warn('Falha ao bloquear aberturas de janela', e);
-  }
+  } catch(e){ console.warn('lock failed',e); }
 }
 
-/* limpa instância anterior da webcam e canvases para evitar duplicação */
-function cleanupPreviousWebcam(){
+/* escreve no terminal com timestamp */
+function logLine(text){
+  const time = new Date().toLocaleTimeString();
+  const div = document.createElement('div');
+  div.className = 'line';
+  div.textContent = '['+time+'] ' + text;
+  terminal.appendChild(div);
+  terminal.scrollTop = terminal.scrollHeight;
+}
+
+/* limpeza de instâncias anteriores (impede multiplas janelas/canvases) */
+function cleanup(){
   try {
-    if (webcam) {
+    if (webcam){
       if (typeof webcam.stop === 'function') webcam.stop();
       else if (webcam.webcam && webcam.webcam.video && webcam.webcam.video.srcObject){
-        const stream = webcam.webcam.video.srcObject;
-        stream.getTracks().forEach(t => t.stop());
+        webcam.webcam.video.srcObject.getTracks().forEach(t=>t.stop());
       }
     }
-  } catch(e){ console.warn('Erro ao parar webcam anterior', e); }
+  } catch(e){ console.warn('cleanup',e); }
   const wc = document.getElementById('webcam-container');
   if (wc) {
-    const olds = wc.querySelectorAll('canvas, video');
-    olds.forEach(n=>n.remove());
+    wc.querySelectorAll('canvas,video').forEach(n=>n.remove());
   }
   webcam = null;
 }
 
-/* inicializa modelo e webcam de forma segura */
+/* inicializa modelo e webcam de maneira segura */
 async function init(){
-  lockWindowOpenOnce();
-  cleanupPreviousWebcam();
+  lockOpen();
+  logLine('initiating model load...');
+  terminalStatus.textContent = 'loading model';
+  cleanup();
 
   const modelURL = URL + "model.json";
   const metadataURL = URL + "metadata.json";
 
   model = await tmImage.load(modelURL, metadataURL);
   maxPredictions = model.getTotalClasses();
+  predCountEl.textContent = String(maxPredictions);
+  logLine('model loaded, classes=' + maxPredictions);
 
-  // criar webcam com tamanho suficiente
-  webcam = new tmImage.Webcam(640, 480, true);
+  // webcam maior para melhor leitura
+  webcam = new tmImage.Webcam(640,480,true);
   await webcam.setup();
-
-  // garante playsinline/autoplay para evitar comportamentos que abrem novas janelas em mobile
-  try {
-    if (webcam.webcam && webcam.webcam.video){
-      webcam.webcam.video.setAttribute('playsinline','');
-      webcam.webcam.video.setAttribute('muted','');
-      webcam.webcam.video.setAttribute('autoplay','');
-    }
-  } catch(e){}
-
+  try { if (webcam.webcam && webcam.webcam.video){ webcam.webcam.video.setAttribute('playsinline',''); webcam.webcam.video.setAttribute('muted',''); webcam.webcam.video.setAttribute('autoplay',''); } } catch(e){}
   await webcam.play();
 
-  // insere canvas único
-  const container = document.getElementById('webcam-container');
-  container.appendChild(webcam.canvas);
+  // inserir canvas único
+  document.getElementById('webcam-container').appendChild(webcam.canvas);
+  camResEl.textContent = webcam.canvas.width + '×' + webcam.canvas.height;
+  statusNum.textContent = '0s';
+  terminalStatus.textContent = 'active';
+  logLine('camera started ' + camResEl.textContent);
 
-  // cria labels HUD corretamente com prioridade para 3 visíveis
-  labelContainer = document.getElementById('label-container');
-  labelContainer.innerHTML = '';
-  // show up to 3 labels; if model has fewer than 3, still show placeholders
-  const showCount = Math.max(3, Math.min(3, maxPredictions));
-  for (let i = 0; i < showCount; i++){
-    const d = document.createElement('div');
-    d.className = 'hud-chip';
-    const name = document.createElement('div');
-    name.className = 'label';
-    name.textContent = (i < maxPredictions) ? model.getClassMetadata ? model.getClassMetadata(i).name || ('Classe ' + (i+1)) : ('Classe ' + (i+1)) : ('Classe ' + (i+1));
-    const prob = document.createElement('div');
-    prob.className = 'prob';
-    prob.textContent = '—';
-    d.appendChild(name);
-    d.appendChild(prob);
-    labelContainer.appendChild(d);
+  // garantir 3 chips visíveis com nomes do modelo
+  const labels = [];
+  for (let i=0;i<maxPredictions;i++) labels.push(model.getClassLabel ? model.getClassLabel(i) : (model.getClassMetadata ? (model.getClassMetadata(i).name || ('Class '+(i+1))) : 'Class '+(i+1)));
+  // fill HUD chips
+  for (let i=0;i<3;i++){
+    const chip = document.getElementById('chip-'+i);
+    const name = labels[i] || ('Class '+(i+1));
+    chip.querySelector('.label').textContent = name;
+    chip.querySelector('.bar > i').style.width = '0%';
+    chip.querySelector('.pct').textContent = '0%';
   }
 
-  // se houver mais classes, armazena extras invisíveis (não mostradas) — prioritiza as 3 primeiras
-  // atualiza readouts
-  const resEl = document.getElementById('cam-res');
-  if (resEl) resEl.textContent = webcam.canvas.width + '×' + webcam.canvas.height;
-  const pc = document.getElementById('pred-count');
-  if (pc) pc.textContent = String(maxPredictions);
-
-  // inicia loop
+  // start loop
+  startTime = Date.now();
   window.requestAnimationFrame(loop);
 }
 
-/* loop principal */
+/* predict loop */
+let startTime = 0;
 async function loop(){
-  if (!webcam) return;
+  if (!webcam || !model) return;
   try {
     webcam.update();
-    await predict();
+    const prediction = await model.predict(webcam.canvas);
+    // update top three predictions (if model has fewer, placeholders remain)
+    for (let i=0;i<3;i++){
+      const chip = document.getElementById('chip-'+i);
+      const bar = chip.querySelector('.bar > i');
+      const pct = chip.querySelector('.pct');
+      const label = chip.querySelector('.label');
+      if (i < prediction.length){
+        const p = prediction[i].probability;
+        label.textContent = prediction[i].className;
+        const w = Math.round(p*100) + '%';
+        bar.style.width = w;
+        pct.textContent = w;
+        // glow intensity by probability
+        if (p > 0.8) bar.style.boxShadow = '0 12px 36px rgba(0,255,102,0.24) inset';
+        else if (p > 0.5) bar.style.boxShadow = '0 8px 24px rgba(0,255,102,0.16) inset';
+        else bar.style.boxShadow = '0 4px 12px rgba(0,255,102,0.08) inset';
+      } else {
+        label.textContent = '—';
+        bar.style.width = '0%';
+        pct.textContent = '0%';
+        bar.style.boxShadow = 'none';
+      }
+    }
+    // uptime
+    const s = Math.floor((Date.now()-startTime)/1000);
+    statusNum.textContent = s + 's';
   } catch(e){
-    console.warn('Erro no loop', e);
+    console.warn('loop error', e);
+    logLine('prediction error: ' + e.message);
   }
   window.requestAnimationFrame(loop);
 }
 
-/* previsões e atualização do HUD — garante mostrar as 3 chips prioritárias */
-async function predict(){
-  if (!model || !webcam) return;
-  const prediction = await model.predict(webcam.canvas);
-  // atualiza os primeiros 3 elementos visíveis
-  const chips = labelContainer.querySelectorAll('.hud-chip');
-  for (let i = 0; i < chips.length; i++){
-    const chip = chips[i];
-    if (!chip) continue;
-    if (i < prediction.length){
-      const p = prediction[i].probability;
-      const name = prediction[i].className;
-      chip.querySelector('.label').textContent = name;
-      chip.querySelector('.prob').textContent = (p*100).toFixed(0) + '%';
-      // estilo condicional
-      if (p > 0.75){
-        chip.style.boxShadow = '0 12px 36px rgba(0,255,122,0.18)';
-        chip.style.borderColor = 'rgba(0,255,122,0.14)';
-      } else if (p > 0.4){
-        chip.style.boxShadow = '0 8px 22px rgba(0,208,106,0.10)';
-        chip.style.borderColor = 'rgba(0,208,106,0.10)';
-      } else {
-        chip.style.boxShadow = '0 6px 16px rgba(0,0,0,0.25)';
-        chip.style.borderColor = 'rgba(0,255,122,0.06)';
-      }
-    } else {
-      // placeholder when model has fewer classes
-      chip.querySelector('.label').textContent = '—';
-      chip.querySelector('.prob').textContent = '—';
-      chip.style.boxShadow = 'none';
-    }
+/* UI controls */
+document.getElementById('start-btn').addEventListener('click', async function(){
+  this.disabled = true; this.textContent = 'BOOT...';
+  try {
+    await init();
+    logLine('system online');
+  } catch(e){
+    logLine('init failed: ' + (e && e.message ? e.message : e));
+  } finally {
+    this.disabled = false; this.textContent = 'START';
   }
-}
-</script>
+});
 
-<script>
-/* UI controls: Start, Pause/Resume, Clear; previne múltiplas janelas ao clicar */
-(function(){
-  const startBtn = document.getElementById('start-btn');
-  const pauseBtn = document.getElementById('pause-btn');
-  const clearBtn = document.getElementById('clear-labels');
-  const statusText = document.getElementById('status-text');
-
-  let isPaused = false;
-
-  startBtn.addEventListener('click', async function(){
-    startBtn.disabled = true;
-    startBtn.textContent = 'Carregando...';
+let paused = false;
+document.getElementById('pause-btn').addEventListener('click', async function(){
+  if (!webcam){
+    paused = !paused;
+    this.textContent = paused ? 'RESUME' : 'PAUSE';
+    return;
+  }
+  if (!paused){
     try {
-      await init();
-      statusText.textContent = 'Ativo';
-    } catch(e){
-      console.error('Falha ao iniciar a câmera', e);
-      statusText.textContent = 'Erro';
-    } finally {
-      startBtn.disabled = false;
-      startBtn.textContent = 'Start';
-    }
-  });
-
-  pauseBtn.addEventListener('click', async function(){
-    if (!webcam){
-      isPaused = !isPaused;
-      pauseBtn.textContent = isPaused ? 'Retomar câmera' : 'Pausar câmera';
-      pauseBtn.setAttribute('aria-pressed', String(isPaused));
-      return;
-    }
-    if (!isPaused){
-      try {
-        if (typeof webcam.stop === 'function') webcam.stop();
-        else if (webcam.webcam && webcam.webcam.video && webcam.webcam.video.srcObject){
-          webcam.webcam.video.srcObject.getTracks().forEach(t=>t.stop());
-        }
-        statusText.textContent = 'Pausado';
-      } catch(e){ console.warn('Erro ao pausar', e); }
-      pauseBtn.textContent = 'Retomar câmera';
-      pauseBtn.setAttribute('aria-pressed','true');
-      isPaused = true;
-    } else {
-      try {
-        if (typeof webcam.play === 'function') await webcam.play();
-        else if (webcam.webcam && webcam.webcam.video) await webcam.webcam.video.play();
-        window.requestAnimationFrame(loop);
-        statusText.textContent = 'Ativo';
-      } catch(e){ console.warn('Erro ao retomar', e); }
-      pauseBtn.textContent = 'Pausar câmera';
-      pauseBtn.setAttribute('aria-pressed','false');
-      isPaused = false;
-    }
-  });
-
-  clearBtn.addEventListener('click', function(){
-    const lc = document.getElementById('label-container');
-    if (!lc) return;
-    // reset to three visible chips
-    lc.innerHTML = '';
-    for (let i=0;i<3;i++){
-      const d = document.createElement('div');
-      d.className = 'hud-chip';
-      d.innerHTML = '<div class="label">Classe ' + (i+1) + '</div><div class="prob">—</div>';
-      lc.appendChild(d);
-    }
-    const st = document.getElementById('status-text');
-    if (st) st.textContent = 'Previsões limpas';
-  });
-
-  // garantir bloqueio de window.open após primeira interação do usuário
-  document.addEventListener('pointerdown', function once(){
+      if (typeof webcam.stop === 'function') webcam.stop();
+      else if (webcam.webcam && webcam.webcam.video && webcam.webcam.video.srcObject) webcam.webcam.video.srcObject.getTracks().forEach(t=>t.stop());
+      terminalStatus.textContent = 'paused';
+      logLine('camera paused');
+    } catch(e){ console.warn(e); }
+    this.textContent = 'RESUME';
+    paused = true;
+  } else {
     try {
-      if (!window.openLocked) {
-        if (!window.__origOpen) window.__origOpen = window.open;
-        window.open = function(){ return null; };
-        document.addEventListener('click', function stopBlank(e){
-          const a = e.target.closest && e.target.closest('a');
-          if (a && a.target === '_blank') e.preventDefault();
-        }, {capture:true});
-        window.openLocked = true;
-      }
-    } catch(e){}
-    document.removeEventListener('pointerdown', once);
-  });
+      if (typeof webcam.play === 'function') await webcam.play();
+      else if (webcam.webcam && webcam.webcam.video) await webcam.webcam.video.play();
+      terminalStatus.textContent = 'active';
+      window.requestAnimationFrame(loop);
+      logLine('camera resumed');
+    } catch(e){ console.warn(e); }
+    this.textContent = 'PAUSE';
+    paused = false;
+  }
+});
 
-})();
+/* reset HUD */
+document.getElementById('clear-btn').addEventListener('click', function(){
+  logLine('HUD reset');
+  for (let i=0;i<3;i++){
+    const chip = document.getElementById('chip-'+i);
+    chip.querySelector('.label').textContent = 'Class ' + (i+1);
+    chip.querySelector('.bar > i').style.width = '0%';
+    chip.querySelector('.pct').textContent = '0%';
+  }
+  terminalStatus.textContent = 'idle';
+});
+
+/* prevent multiple windows on first user interaction */
+document.addEventListener('pointerdown', function once(){
+  try { lockOpen(); logLine('window.open locked'); } catch(e){}
+  document.removeEventListener('pointerdown', once);
+});
 </script>
 </body>
 </html>
